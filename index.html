@@ -71,7 +71,7 @@
 			// ****************************************
 			// 3. Call API to get the weather based on IP
 			// ****************************************
-			const responseIPWeather = await fetch("http://api.weatherstack.com/current?access_key=839477e3b35f6f43dcbb46dcb512f5af&query=" + ipAddress.ip, {
+			const responseIPWeather = await fetch("https://api.weatherstack.com/current?access_key=839477e3b35f6f43dcbb46dcb512f5af&query=" + ipAddress.ip, {
 				"method": "GET",				
 			});
 			const weatherByIP = await responseIPWeather.json(); // Get data in json	
@@ -86,7 +86,7 @@
 			// ****************************************
 			// 4. Call API to get the weather based on city
 			// ****************************************
-			const responseAddressWeather = await fetch("http://api.weatherstack.com/current?access_key=839477e3b35f6f43dcbb46dcb512f5af&query=" + location.city + ", " + location.country, {
+			const responseAddressWeather = await fetch("https://api.weatherstack.com/current?access_key=839477e3b35f6f43dcbb46dcb512f5af&query=" + location.city + ", " + location.country, {
 				"method": "GET",				
 			});			
 			const weatherByAddress = await responseAddressWeather.json(); // Get data in json		
