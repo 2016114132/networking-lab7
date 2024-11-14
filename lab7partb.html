@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+		<style>
+			p{
+				font-size: 18px;
+			}
+		</style>
+	</head>
+
+	<body class="mx-auto" style="width: 400px;">
+
+	<h1>Lab 7 JavaScript &amp; API's</h1>
+
+	<h2>Your IP Address is:</h2>
+	<p id="ipaddress">...</p>	
+
+	<h2>Your location is:</h2>
+	<div style="display: inline;">
+		<img id="flag" style="width: 25px; float:left; margin-right:10px;" >
+		<p id="address">...</p>	
+	</div>
+
+	<h2>The weather based on IP is: </h2>
+	<div style="display: inline;">
+		<img id="ip-weather-image" style="width: 25px; float:left; margin-right:10px;" >
+		<p id="ip-weather">...</p>	
+	</div>
+
+	<h2>The weather based on Address is: </h2>
+	<div style="display: inline;">
+		<img id="address-weather-image" style="width: 25px; float:left; margin-right:10px;" >
+		<p id="address-weather">...</p>	
+	</div>
+
+	<script>
+		async function loadLocation() {
+			// ****************************************
+			// 1. Call API to get current IP Address
+			// ****************************************
+			const myIpAddress = await fetch("https://api.ipify.org?format=json");						
+			const ipAddress = await myIpAddress.json(); // Get data in json
+
+			// Display IP Address
+			document.getElementById("ipaddress").innerHTML = ipAddress.ip;			
+
+
+
+
+			// ****************************************
+			// 2. Call API to get location details based on IP Address
+			// ****************************************
+			const response = await fetch("https://ip-geolocation-ipwhois-io.p.rapidapi.com/json/?ip=" + ipAddress.ip, {
+				"method": "GET",
+				"headers": {
+					"x-rapidapi-host": "ip-geolocation-ipwhois-io.p.rapidapi.com",
+					"x-rapidapi-key": "044e648b19mshfece6f865ead2b3p1a1a7ajsn036a4345378f"
+				}
+			});
+			const location = await response.json(); // Get data in json
+
+			// Display the address in html
+			document.getElementById("address").innerHTML = location.city + ", " + location.country;
+			document.getElementById("flag").src = location.country_flag;
+
+
+
+
+			// ****************************************
+			// 3. Call API to get the weather based on IP
+			// ****************************************
+			const responseIPWeather = await fetch("http://api.weatherstack.com/current?access_key=839477e3b35f6f43dcbb46dcb512f5af&query=" + ipAddress.ip, {
+				"method": "GET",				
+			});
+			const weatherByIP = await responseIPWeather.json(); // Get data in json	
+
+			// Display the weather in html
+			document.getElementById("ip-weather").innerHTML = weatherByIP.current.weather_descriptions.join("");
+			document.getElementById("ip-weather-image").src = weatherByIP.current.weather_icons[0];
+
+
+
+			
+			// ****************************************
+			// 4. Call API to get the weather based on city
+			// ****************************************
+			const responseAddressWeather = await fetch("http://api.weatherstack.com/current?access_key=839477e3b35f6f43dcbb46dcb512f5af&query=" + location.city + ", " + location.country, {
+				"method": "GET",				
+			});			
+			const weatherByAddress = await responseAddressWeather.json(); // Get data in json		
+
+			// Display the weather in html
+			document.getElementById("address-weather").innerHTML = weatherByAddress.current.weather_descriptions.join("");
+			document.getElementById("address-weather-image").src = weatherByAddress.current.weather_icons[0];
+
+		}
+
+		loadLocation();
+	</script>
+
+
+
+
+</body></html>
